@@ -24,6 +24,12 @@ jobs:
           fi
           echo ::set-output name=VERSION::$VERSION
 
+      - name: Get the repository name in lowercase
+        id: repo_name
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | awk '{print tolower($0)}')
+          echo ::set-output name=REPO_NAME::$REPO_NAME
+
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
