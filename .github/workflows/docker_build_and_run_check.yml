@@ -14,6 +14,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Get the repository name in lowercase
+        id: repo_name
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | awk '{print tolower($0)}')
+          echo ::set-output name=REPO_NAME::$REPO_NAME
+
       - name: Build Docker image
         id: docker_build
         uses: docker/build-push-action@v3
