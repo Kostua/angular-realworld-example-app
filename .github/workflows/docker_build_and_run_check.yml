@@ -26,11 +26,11 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ github.repository }}:PR-test
+          tags: ${{ steps.repo_name.outputs.REPO_NAME }}:pr-test
 
       - name: Run Docker container
         run: |
-          docker run --name test-container -d ${{ github.repository }}:PR-test
+          docker run --name test-container -d ${{ steps.repo_name.outputs.REPO_NAME }}:pr-test
           sleep 10
           if [[ "$(docker ps -q -f name=test-container)" ]]; then
             echo "Container is running."
