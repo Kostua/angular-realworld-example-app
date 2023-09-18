@@ -22,7 +22,7 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ steps.repo_name.outputs.REPO_NAME }}:pr-test
+          tags: angular-realworld-example-app:pr-test
 
       - name: Run Docker container
         run: |
