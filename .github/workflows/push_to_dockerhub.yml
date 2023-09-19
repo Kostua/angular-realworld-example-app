@@ -2,15 +2,29 @@ name: Build and Push Docker image
 
 on:
   push:
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+*'
     branches:
       - main
-
-  workflow_dispatch:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Check if the push event is on the main branch and has a semantic version tag
+        id: check
+        run: |
+          if [[ $GITHUB_REF == refs/heads/main && $GITHUB_REF == refs/tags/* ]]; then
+            echo "::set-output name=proceed::true"
+          else
+            echo "::set-output name=proceed::false"
+          fi
+
   build:
+    needs: check
+    if: needs.check.outputs.proceed == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -20,10 +34,7 @@ jobs:
       - name: Get the version
         id: get_version
         run: |
-          VERSION="latest"
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          fi
+          VERSION=${GITHUB_REF#refs/tags/}
           echo ::set-output name=VERSION::$VERSION
 
       - name: Login to DockerHub
@@ -38,6 +49,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-             ${{ secrets.DOCKERHUB_USERNAME }}/angular-realworld-example-app:${{ steps.get_version.outputs.VERSION }}
-             ${{ secrets.DOCKERHUB_USERNAME }}/angular-realworld-example-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/angular-realworld-example-app:${{ steps.get_version.outputs.VERSION }}
