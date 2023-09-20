@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+*'
+      - '[0-9]+\.[0-9]+\.[0-9]+.*'
 
 jobs:
   check:
@@ -16,7 +16,7 @@ jobs:
       - name: Check if the push event has a semantic version tag
         id: check
         run: |
-          if [[ $GITHUB_REF == refs/tags/[0-9]+.[0-9]+.[0-9]+* ]]; then
+          if [[ $GITHUB_REF =~ refs/tags/[0-9]+\.[0-9]+\.[0-9]+.* ]]; then
             echo "::set-output name=proceed::true"
           else
             echo "::set-output name=proceed::false"
