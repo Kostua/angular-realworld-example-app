@@ -9,7 +9,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN npm run build --prod
 
 # Step 2: Serve the application with Nginx
 FROM nginx:alpine3.18
