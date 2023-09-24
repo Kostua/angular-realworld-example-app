@@ -11,7 +11,13 @@ COPY . .
 
 RUN npm run build
 
-# Step 2: Serve the application with Nginx
-FROM nginx:alpine3.18
+# Step 2: Serve the application with Node.js
+FROM node:16.20.2
 
-COPY --from=build /app/dist/angular-conduit/ /usr/share/nginx/html
+WORKDIR /app
+
+COPY --from=build /app/dist/angular-conduit/ .
+
+EXPOSE 4200
+
+CMD ["npm", "start"]
