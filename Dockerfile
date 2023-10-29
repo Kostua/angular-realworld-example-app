@@ -1,5 +1,5 @@
 # Use an official Node runtime as the base image
-FROM node:14 as build-stage
+FROM node:20 as build-stage
 
 # Set the working directory in the container
 WORKDIR /app
@@ -10,9 +10,6 @@ COPY package*.json ./
 # Install project dependencies
 RUN npm install
 
-# Debug: Print Angular CLI version
-RUN npx ng version
-
 # Copy the entire project into the container
 COPY . .
 
@@ -20,7 +17,7 @@ COPY . .
 RUN npx ng build
 
 # Start a new stage to create a smaller image
-FROM nginx:alpine
+FROM nginx:1.25-bookworm
 
 # Copy the build output to replace the default nginx contents
 COPY --from=build-stage /app/dist/angular-conduit /usr/share/nginx/html
