@@ -1,5 +1,5 @@
 # Use an official Node runtime as the base image
-FROM docker pull node:20.9.0-bookworm as build-stage
+FROM node:20.9.0-bookworm as build-stage
 
 # Set the working directory in the container
 WORKDIR /app
